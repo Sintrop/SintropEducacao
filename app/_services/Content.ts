@@ -11,7 +11,8 @@ export interface ContentProps {
     totalMiliseconds: number
     gender: string
     author: string
-    fileServer: string
+    urlVideo: string
+    platformHost: string;
     postUrl: string
     emphasis: boolean
     createdAt: string;
@@ -27,7 +28,8 @@ export interface EpisodeProps {
     description: string
     season: string
     contentId: string
-    fileServer: string
+    urlVideo: string
+    platformHost: string;
     numberEp: number
     postUrl: string
     totalMiliseconds: number
@@ -56,5 +58,16 @@ export async function getContents(): Promise<ReturnGetContentsProps> {
         ebooks,
         top10,
         emphasis: filterEmphasis.length > 0 ? filterEmphasis[0] : null,
+    }
+}
+
+interface ReturnGetContentProps{
+    contentData: ContentProps;
+}
+export async function getContentData(id: string): Promise<ReturnGetContentProps>{
+    const response = await api.get(`/content/${id}`);
+
+    return {
+        contentData: response.data as ContentProps,
     }
 }
