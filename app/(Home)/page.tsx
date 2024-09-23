@@ -2,6 +2,10 @@ import Image from "next/image";
 import { getContents } from "../_services/Content";
 import { ContentItem } from "../_components/ContentItem/ContentItem";
 import Link from "next/link";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { CreateContent } from "../_components/CreateContent/CreateContent";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default async function Home() {
     const { contents, ebooks, emphasis, mostSeen, top10, trainings } = await getContents();
@@ -43,73 +47,86 @@ export default async function Home() {
                     </div>
 
                 </div>
-                    <div className='flex flex-col gap-9 mt-5 pb-10'>
-                        {mostSeen.length > 0 && (
-                            <div>
-                                <p className='font-bold text-white mx-5'>Mais vistos</p>
 
-                                <div className='flex gap-3 pl-5'>
-                                    {mostSeen.map((item, index) => (
-                                        <ContentItem
-                                            key={item?.id}
-                                            data={item}
-                                            index={index}
-                                        />
-                                    ))}
-                                </div>
+                <div className='flex flex-col gap-9 mt-5 pb-10'>
+                    {mostSeen.length > 0 && (
+                        <div>
+                            <p className='font-bold text-white mx-5'>Mais vistos</p>
+
+                            <div className='flex gap-3 pl-5'>
+                                {mostSeen.map((item, index) => (
+                                    <ContentItem
+                                        key={item?.id}
+                                        data={item}
+                                        index={index}
+                                    />
+                                ))}
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {top10.length > 0 && (
-                            <div>
-                                <p className='font-bold text-white mx-5'>Top 10 da semana</p>
+                    {top10.length > 0 && (
+                        <div>
+                            <p className='font-bold text-white mx-5'>Top 10 da semana</p>
 
-                                <div className='flex gap-[130px] pl-5 overflow-x-auto overflow-y-hidden'>
-                                    {top10.map((item, index) => (
-                                        <ContentItem
-                                            key={item?.id}
-                                            data={item}
-                                            type='top-10'
-                                            index={index}
-                                        />
-                                    ))}
-                                </div>
+                            <div className='flex gap-[130px] pl-5 overflow-x-auto overflow-y-hidden'>
+                                {top10.map((item, index) => (
+                                    <ContentItem
+                                        key={item?.id}
+                                        data={item}
+                                        type='top-10'
+                                        index={index}
+                                    />
+                                ))}
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {trainings.length > 0 && (
-                            <div>
-                                <p className='font-bold text-white mx-5'>Treinamentos</p>
+                    {trainings.length > 0 && (
+                        <div>
+                            <p className='font-bold text-white mx-5'>Treinamentos</p>
 
-                                <div className='flex gap-3 pl-5 overflow-x-auto overflow-y-hidden'>
-                                    {trainings.map((item, index) => (
-                                        <ContentItem
-                                            key={item?.id}
-                                            data={item}
-                                            index={index}
-                                        />
-                                    ))}
-                                </div>
+                            <div className='flex gap-3 pl-5 overflow-x-auto overflow-y-hidden'>
+                                {trainings.map((item, index) => (
+                                    <ContentItem
+                                        key={item?.id}
+                                        data={item}
+                                        index={index}
+                                    />
+                                ))}
                             </div>
-                        )}
+                        </div>
+                    )}
 
-                        {ebooks.length > 0 && (
-                            <div>
-                                <p className='font-bold text-white mx-5'>Ebooks</p>
+                    {ebooks.length > 0 && (
+                        <div>
+                            <p className='font-bold text-white mx-5'>Ebooks</p>
 
-                                <div className='flex gap-3 pl-5 overflow-x-auto overflow-y-hidden'>
-                                    {ebooks.map((item, index) => (
-                                        <ContentItem
-                                            key={item?.id}
-                                            data={item}
-                                            index={index}
-                                        />
-                                    ))}
-                                </div>
+                            <div className='flex gap-3 pl-5 overflow-x-auto overflow-y-hidden'>
+                                {ebooks.map((item, index) => (
+                                    <ContentItem
+                                        key={item?.id}
+                                        data={item}
+                                        index={index}
+                                    />
+                                ))}
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
+                </div>
+
+                <Dialog>
+                    <DialogTrigger
+                        className="fixed bottom-5 right-5 w-10 h-10 bg-red-500"
+                    >
+
+                    </DialogTrigger>
+
+                    <CreateContent/>
+                </Dialog>
             </div>
+
+            <ToastContainer/>
         </div>
     );
 }
