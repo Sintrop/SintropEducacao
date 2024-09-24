@@ -4,7 +4,7 @@ import Link from "next/link";
 
 interface Props{
     type?: 'top-10' | 'normal';
-    data: Prisma.ContentGetPayload<{}>;
+    data: Prisma.ContentGetPayload<null>;
     index: number;
 }
 

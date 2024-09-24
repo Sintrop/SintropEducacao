@@ -36,7 +36,7 @@ interface ReturnGetContentsProps {
     contents: Prisma.ContentGetPayload<{include: {Episodes: true}}>[];
     trainings: Prisma.ContentGetPayload<{include: {Episodes: true}}>[];
     mostSeen: Prisma.ContentGetPayload<{include: {Episodes: true}}>[];
-    ebooks: Prisma.ContentGetPayload<{}>[];
+    ebooks: Prisma.ContentGetPayload<null>[];
     top10: Prisma.ContentGetPayload<{include: {Episodes: true}}>[];
     emphasis: Prisma.ContentGetPayload<{include: {Episodes: true}}> | null;
 }
