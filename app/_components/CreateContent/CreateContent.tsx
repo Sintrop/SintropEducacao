@@ -6,6 +6,7 @@ import { LoginWithWalletAndPassword, UserProps } from "@/app/_services/Auth";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { createContent } from "@/app/_services/Content";
+import { uploadImage } from "@/app/_services/UploadImage";
 
 export function CreateContent() {
     const [wallet, setWallet] = useState('');
@@ -14,7 +15,8 @@ export function CreateContent() {
     const [step, setStep] = useState(1);
     const [contentTitle, setContentTitle] = useState('');
     const [contentDescription, setContentDescription] = useState('');
-    const [contentImage, setContentImage] = useState('');
+    const [contentImage, setContentImage] = useState<Blob>();
+    const [contentImagePreview, setContentImagePreview] = useState('');
     const [contentType, setContentType] = useState<'movie' | 'serie' | 'ebook'>('movie');
     const [contentHost, setContentHost] = useState<'youtube'>('youtube');
     const [contentUrl, setContentUrl] = useState('');
@@ -54,13 +56,15 @@ export function CreateContent() {
     }
 
     async function handleCreateContent(){
+        const postUrl = await uploadImage({file: contentImage});
+
         const response = await createContent({
             title: contentTitle,
             author: userData?.wallet,
             category: 'common',
             description: contentDescription,
             platformHost: contentHost,
-            postUrl: contentImage,
+            postUrl,
             type: contentType,
             urlContent: contentUrl
         });
@@ -78,7 +82,8 @@ export function CreateContent() {
 
         if (file) {
             const urlPreview = URL.createObjectURL(file);
-            setContentImage(urlPreview);
+            setContentImagePreview(urlPreview);
+            setContentImage(file);
         }
     }
 
@@ -126,9 +131,9 @@ export function CreateContent() {
                                 type="file"
                             />
 
-                            {contentImage !== '' && (
+                            {contentImagePreview !== '' && (
                                 <Image
-                                    src={contentImage}
+                                    src={contentImagePreview}
                                     alt='Imagem de capa'
                                     width={300}
                                     height={500}
