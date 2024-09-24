@@ -20,8 +20,8 @@ export default function PlayContent({ params }: Props) {
         const {contentData} = await getContentData(params.id);
 
         if(params.contentType === 'movie'){
-            if(contentData.platformHost === 'youtube'){
-                fixUrlEmbedYoutube(contentData.urlVideo);
+            if(contentData?.platformHost === 'youtube'){
+                fixUrlEmbedYoutube(contentData.urlContent);
             }
         }
     }

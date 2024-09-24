@@ -127,3 +127,44 @@ export async function getContentData(id: string): Promise<ReturnGetContentProps>
         }
     }
 }
+
+interface CreateContentProps{
+    title: string;
+    description: string;
+    postUrl: string;
+    type: string;
+    urlContent: string;
+    category: string;
+    author: string;
+    platformHost: string;
+
+}
+interface ReturnCreateContentProps{
+    error: boolean;
+}
+export async function createContent(data: CreateContentProps): Promise<ReturnCreateContentProps>{
+    const {author, type, category, description, platformHost, postUrl, title, urlContent} = data;
+    
+    try{
+        const createdContent = await prisma.content.create({
+            data:{
+                author,
+                category,
+                description,
+                platformHost,
+                postUrl,
+                title,
+                type,
+                urlContent
+            }
+        });
+
+        return{
+            error: false,
+        }
+    }catch(e){
+        return{
+            error: true,
+        }
+    }
+}

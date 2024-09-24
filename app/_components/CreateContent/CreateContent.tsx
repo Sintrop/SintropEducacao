@@ -5,6 +5,7 @@ import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTit
 import { LoginWithWalletAndPassword, UserProps } from "@/app/_services/Auth";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { createContent } from "@/app/_services/Content";
 
 export function CreateContent() {
     const [wallet, setWallet] = useState('');
@@ -50,6 +51,26 @@ export function CreateContent() {
         if (response?.user) {
             setUserData(response.user);
         }
+    }
+
+    async function handleCreateContent(){
+        const response = await createContent({
+            title: contentTitle,
+            author: userData?.wallet,
+            category: 'common',
+            description: contentDescription,
+            platformHost: contentHost,
+            postUrl: contentImage,
+            type: contentType,
+            urlContent: contentUrl
+        });
+
+        if(response.error){
+            toast.error('Erro ao criar seu conteudo');
+            return;
+        }
+
+        toast.success('Conteúdo criado com sucesso!')
     }
 
     function handleSelectContentImage(e: ChangeEvent<HTMLInputElement>) {
@@ -154,9 +175,13 @@ export function CreateContent() {
                         </div>
                     )}
 
-                    {step === 3 && (
+                    {step === 4 && (
                         <div className="flex flex-col">
-                            
+                            <button 
+                                onClick={handleCreateContent}
+                            >
+                                Criar conteúdo
+                            </button>
                         </div>
                     )}
 
