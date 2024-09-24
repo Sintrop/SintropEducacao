@@ -31,7 +31,7 @@ export default async function Content({ params }: Props) {
                             {contentData?.type === 'ebook' && (
                                 <a
                                     className='font-bold w-32 h-10 flex items-center justify-center rounded-md bg-white mt-5 gap-2'
-                                    href={contentData?.urlVideo}
+                                    href={contentData?.urlContent}
                                     target="_blank"
                                 >
                                     Ler ebook
