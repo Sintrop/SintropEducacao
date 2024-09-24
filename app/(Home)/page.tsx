@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 export default async function Home() {
-    const { contents, ebooks, emphasis, mostSeen, top10, trainings } = await getContents();
+    const { ebooks, emphasis, mostSeen, top10, trainings } = await getContents();
 
     return (
         <div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden bg-container-primary">

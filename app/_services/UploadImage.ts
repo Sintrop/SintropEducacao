@@ -15,7 +15,7 @@ export async function uploadImage({file}: UploadImageProps): Promise<string>{
 
 async function uploadImageToFirebase(file: Blob): Promise<string> {
     const storageRef = ref(storage, `/images/${Number(Math.random() * 1225465542).toFixed(0)}.png`);
-    const upload = await uploadBytesResumable(storageRef, file);
+    await uploadBytesResumable(storageRef, file);
     const url = await getDownloadURL(storageRef);
     return url;
 }

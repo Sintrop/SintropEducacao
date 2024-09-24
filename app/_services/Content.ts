@@ -146,7 +146,7 @@ export async function createContent(data: CreateContentProps): Promise<ReturnCre
     const {author, type, category, description, platformHost, postUrl, title, urlContent} = data;
     
     try{
-        const createdContent = await prisma.content.create({
+        await prisma.content.create({
             data:{
                 author,
                 category,
@@ -163,6 +163,7 @@ export async function createContent(data: CreateContentProps): Promise<ReturnCre
             error: false,
         }
     }catch(e){
+        console.log(e);
         return{
             error: true,
         }

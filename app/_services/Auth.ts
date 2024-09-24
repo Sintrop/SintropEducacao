@@ -68,7 +68,8 @@ async function GetUserData(): Promise<ReturnGetUserDataProps>{
             user: response.data.user as UserProps,
             error: false,
         }
-    }catch(err){
+    }catch(e){
+        console.log(e)
         return{
             error: true
         }

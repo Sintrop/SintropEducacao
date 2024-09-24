@@ -1,7 +1,7 @@
 "use client"
 
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { LoginWithWalletAndPassword, UserProps } from "@/app/_services/Auth";
 import { toast } from "react-toastify";
 import Image from "next/image";
@@ -29,6 +29,8 @@ export function CreateContent() {
         } else {
             setDisablePreviousStep(false);
         }
+
+        setDisableNextStep(false);
     }, [
         step
     ]);
