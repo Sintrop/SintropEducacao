@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyAiht5Z673BW0M1EdIMO1mGWSpcsHcItaU",
+    apiKey: process.env.FIREBASE_API_KEY,
     authDomain: "sintropeducacao.firebaseapp.com",
     projectId: "sintropeducacao",
     storageBucket: "sintropeducacao.appspot.com",
-    messagingSenderId: "613332735146",
-    appId: "1:613332735146:web:18b7cc2fab9617ff6aacd3"
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID
 };
   
 
