@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import Image from "next/image";
 import { createContent } from "@/app/_services/Content";
 import { uploadImage } from "@/app/_services/UploadImage";
+import { uploadPdf } from "@/app/_services/UploadPdf";
 
 export function CreateContent() {
     const [wallet, setWallet] = useState('');
@@ -20,6 +21,7 @@ export function CreateContent() {
     const [contentType, setContentType] = useState<'movie' | 'serie' | 'ebook'>('movie');
     const [contentHost, setContentHost] = useState<'youtube'>('youtube');
     const [contentUrl, setContentUrl] = useState('');
+    const [contentPdf, setContentPdf] = useState<Blob>();
     const [disablePreviousStep, setDisablePreviousStep] = useState(false);
     const [disableNextStep, setDisableNextStep] = useState(false);
 
@@ -57,8 +59,18 @@ export function CreateContent() {
         }
     }
 
-    async function handleCreateContent(){
-        const postUrl = await uploadImage({file: contentImage});
+    async function handleCreateContent() {
+        const postUrl = await uploadImage({ file: contentImage });
+
+        let urlContent = '';
+        if(contentType === 'movie'){
+            urlContent = contentUrl;
+        }
+
+        if(contentType === 'ebook'){
+            const urlPdf = await uploadPdf({file: contentPdf});
+            urlContent = urlPdf;
+        }
 
         const response = await createContent({
             title: contentTitle,
@@ -68,10 +80,10 @@ export function CreateContent() {
             platformHost: contentHost,
             postUrl,
             type: contentType,
-            urlContent: contentUrl
+            urlContent
         });
 
-        if(response.error){
+        if (response.error) {
             toast.error('Erro ao criar seu conteudo');
             return;
         }
@@ -86,6 +98,14 @@ export function CreateContent() {
             const urlPreview = URL.createObjectURL(file);
             setContentImagePreview(urlPreview);
             setContentImage(file);
+        }
+    }
+
+    function handleSelectContentPdf(e: ChangeEvent<HTMLInputElement>){
+        const file = e.target.files && e.target.files[0];
+
+        if (file) {
+            setContentPdf(file);
         }
     }
 
@@ -131,6 +151,7 @@ export function CreateContent() {
                                 placeholder="Selecione uma imagem"
                                 onChange={handleSelectContentImage}
                                 type="file"
+                                accept="image/*"
                             />
 
                             {contentImagePreview !== '' && (
@@ -154,29 +175,44 @@ export function CreateContent() {
                                 onChange={(e) => setContentType(e.target.value as typeof contentType)}
                             >
                                 <option value='movie'>Filme</option>
-                                {/* <option value='serie'>Série</option>
-                                <option value='ebook'>E-book</option> */}
+                                <option value='serie'>Série</option>
+                                <option value='ebook'>E-book</option>
                             </select>
 
-                            <label className="mt-4 text-black">Provedor do conteúdo</label>
-                            <select
-                                className="w-full h-12 border border-gray-400 rounded-md text-black px-3"
-                                value={contentHost}
-                                onChange={(e) => setContentHost(e.target.value as typeof contentHost)}
-                            >
-                                <option value='youtube'>Youtube</option>
-                            </select>
-
-                            {contentType === 'movie' && (
+                            {contentType === 'ebook' ? (
                                 <>
-                                    <label className="mt-4 text-black">URL do vídeo</label>
+                                    <label className="mt-4 text-black">Selecione o arquivo</label>
                                     <input
-                                        className="w-full h-12 border border-gray-400 rounded-md text-black px-3"
-                                        placeholder="Digite aqui"
-                                        value={contentUrl}
-                                        onChange={(e) => setContentUrl(e.target.value)}
-                                        required
+                                        className="w-full text-black"
+                                        placeholder="Selecione uma imagem"
+                                        onChange={handleSelectContentPdf}
+                                        type="file"
+                                        accept="application/pdf"
                                     />
+                                </>
+                            ) : (
+                                <>
+                                    <label className="mt-4 text-black">Provedor do conteúdo</label>
+                                    <select
+                                        className="w-full h-12 border border-gray-400 rounded-md text-black px-3"
+                                        value={contentHost}
+                                        onChange={(e) => setContentHost(e.target.value as typeof contentHost)}
+                                    >
+                                        <option value='youtube'>Youtube</option>
+                                    </select>
+
+                                    {contentType === 'movie' && (
+                                        <>
+                                            <label className="mt-4 text-black">URL do vídeo</label>
+                                            <input
+                                                className="w-full h-12 border border-gray-400 rounded-md text-black px-3"
+                                                placeholder="Digite aqui"
+                                                value={contentUrl}
+                                                onChange={(e) => setContentUrl(e.target.value)}
+                                                required
+                                            />
+                                        </>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -184,7 +220,7 @@ export function CreateContent() {
 
                     {step === 4 && (
                         <div className="flex flex-col">
-                            <button 
+                            <button
                                 onClick={handleCreateContent}
                             >
                                 Criar conteúdo
