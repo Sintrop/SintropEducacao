@@ -1,23 +1,20 @@
 "use server"
-import { api } from "./api";
+import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 export interface ContentProps {
-    id: string
-    title: string
-    description: string
-    type: string
-    totalPlays: number
-    totalWeek: number
-    totalMiliseconds: number
-    gender: string
-    author: string
-    urlVideo: string
-    platformHost: string;
-    postUrl: string
+    id: string;
+    title: string;
+    description: string;
+    type: string;
+    totalPlays: number;
+    totalWeek: number;
+    author: string;
+    urlContent: string;
+    postUrl: string;
     emphasis: boolean
     createdAt: string;
-    launchedAt: string;
-    category: string
+    platformHost: string;
 
     Episodes: EpisodeProps[];
 }
@@ -28,46 +25,105 @@ export interface EpisodeProps {
     description: string
     season: string
     contentId: string
-    urlVideo: string
+    urlContent: string
     platformHost: string;
     numberEp: number
     postUrl: string
-    totalMiliseconds: number
     createdAt: string
-    launchedAt: string
 }
 
-interface ReturnGetContentsProps{
-    contents: ContentProps[];
-    trainings: ContentProps[];
-    mostSeen: ContentProps[];
-    ebooks: ContentProps[];
-    top10: ContentProps[];
-    emphasis: ContentProps | null
+interface ReturnGetContentsProps {
+    contents: Prisma.ContentGetPayload<{include: {Episodes: true}}>[];
+    trainings: Prisma.ContentGetPayload<{include: {Episodes: true}}>[];
+    mostSeen: Prisma.ContentGetPayload<{include: {Episodes: true}}>[];
+    ebooks: Prisma.ContentGetPayload<{}>[];
+    top10: Prisma.ContentGetPayload<{include: {Episodes: true}}>[];
+    emphasis: Prisma.ContentGetPayload<{include: {Episodes: true}}> | null;
 }
 export async function getContents(): Promise<ReturnGetContentsProps> {
-    const response = await api.get('/content');
-    const {contents, trainings, mostSeen, ebooks, top10} = response.data as ReturnGetContentsProps;
+    const contents = await prisma.content.findMany({
+        include:{
+            Episodes: true
+        }
+    });
 
     const filterEmphasis = contents.filter(item => item.emphasis === true);
 
+    const trainingsContents = await prisma.content.findMany({
+        where:{
+            category: 'trainning',
+        },
+        orderBy: {
+            createdAt: 'desc'
+        },
+        include:{
+            Episodes: true
+        }
+    });
+
+    const mostSeen = await prisma.content.findMany({
+        orderBy:{
+            totalPlays: 'desc',
+        },
+        include:{
+            Episodes: true
+        }
+    });
+
+    const top10Week = await prisma.content.findMany({
+        orderBy:{
+            totalWeek: 'desc',
+        },
+        include:{
+            Episodes: true
+        }
+    })
+
+    const ebooks = await prisma.content.findMany({
+        where:{
+            type: 'ebook',
+        },
+        orderBy:{
+            createdAt: 'desc',
+        }
+    });
+
     return{
         contents,
-        trainings,
-        mostSeen,
         ebooks,
-        top10,
         emphasis: filterEmphasis.length > 0 ? filterEmphasis[0] : null,
+        mostSeen,
+        top10: top10Week,
+        trainings: trainingsContents
     }
 }
 
-interface ReturnGetContentProps{
-    contentData: ContentProps;
+interface ReturnGetContentProps {
+    contentData?: Prisma.ContentGetPayload<{
+        include:{
+            Episodes: true
+        }
+    }>;
+    error?: boolean;
 }
-export async function getContentData(id: string): Promise<ReturnGetContentProps>{
-    const response = await api.get(`/content/${id}`);
-
-    return {
-        contentData: response.data as ContentProps,
+export async function getContentData(id: string): Promise<ReturnGetContentProps> {
+    const contentData = await prisma.content.findUnique({
+        where: {
+            id,
+        },
+        include: {
+            Episodes: true,
+        }
+    })
+    
+    if(contentData){
+        return {
+            contentData,
+            error: false
+        }
+    }else{
+        return{
+            error: true
+        }
     }
 }

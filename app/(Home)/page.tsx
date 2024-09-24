@@ -38,7 +38,7 @@ export default async function Home() {
                         {emphasis?.type === 'ebook' && (
                             <a
                                 className='font-bold w-32 h-10 flex items-center justify-center rounded-md bg-white mt-5 gap-2'
-                                href={emphasis?.urlVideo}
+                                href={emphasis?.urlContent}
                                 target="_blank"
                             >
                                 Ler ebook

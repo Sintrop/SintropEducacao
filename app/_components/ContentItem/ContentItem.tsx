@@ -1,10 +1,10 @@
-import { ContentProps } from "@/app/_services/Content";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 
 interface Props{
     type?: 'top-10' | 'normal';
-    data: ContentProps;
+    data: Prisma.ContentGetPayload<{}>;
     index: number;
 }
 
