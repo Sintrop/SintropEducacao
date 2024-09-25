@@ -5,9 +5,10 @@ import { DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/compon
 import { LoginWithWalletAndPassword, UserProps } from "@/app/_services/Auth";
 import { toast } from "react-toastify";
 import Image from "next/image";
-import { createContent } from "@/app/_services/Content";
+import { createContent, createEpisode, CreateEpisodeProps } from "@/app/_services/Content";
 import { uploadImage } from "@/app/_services/UploadImage";
 import { uploadPdf } from "@/app/_services/UploadPdf";
+import { CreateEpisodeItem } from "./components/CreateEpisodeItem";
 
 export function CreateContent() {
     const [wallet, setWallet] = useState('');
@@ -22,8 +23,10 @@ export function CreateContent() {
     const [contentHost, setContentHost] = useState<'youtube'>('youtube');
     const [contentUrl, setContentUrl] = useState('');
     const [contentPdf, setContentPdf] = useState<Blob>();
+    const [contentEpisodes, setContentEpisodes] = useState<CreateEpisodeProps[]>([]);
     const [disablePreviousStep, setDisablePreviousStep] = useState(false);
     const [disableNextStep, setDisableNextStep] = useState(false);
+    const [createNewEpisode, setCreateNewEpisode] = useState(false);
 
     useEffect(() => {
         if (step === 1) {
@@ -88,7 +91,28 @@ export function CreateContent() {
             return;
         }
 
+        if(contentType === 'serie'){
+            for(var i = 0; i < contentEpisodes.length; i++){
+                const ep = contentEpisodes[i];
+                await createEpisode({
+                    contentId: response.contentId,
+                    title: ep.title,
+                    description: ep.description,
+                    urlContent: ep.urlContent,
+                    platformHost: contentHost,
+                    postUrl,
+                    numberEp: i + 1,
+                    season: '1'
+                })
+            }
+        }
+
         toast.success('Conteúdo criado com sucesso!')
+    }
+
+    function addEp(data: CreateEpisodeProps){
+        contentEpisodes.push(data);
+        setCreateNewEpisode(false)
     }
 
     function handleSelectContentImage(e: ChangeEvent<HTMLInputElement>) {
@@ -214,6 +238,44 @@ export function CreateContent() {
                                         </>
                                     )}
                                 </>
+                            )}
+                        </div>
+                    )}
+
+                    {step === 3 && (
+                        <div className="flex flex-col max-h-[400px] overflow-y-auto">
+                            <div className="flex flex-col gap-2 mb-5">
+                                {contentEpisodes.length === 0 ? (
+                                    <p className="text-black">Nenhuma episódio...</p>
+                                ) : (
+                                    <>
+                                        {contentEpisodes.map(item => (
+                                            <CreateEpisodeItem
+                                                addEp={() => {}}
+                                                cancelAdd={() => {}}
+                                                key={item.title}
+                                                data={item}
+                                            />
+                                        ))}
+                                    </>
+                                )}
+                            </div>
+
+                            {createNewEpisode ? (
+                                <>
+                                    <CreateEpisodeItem
+                                        createNew
+                                        addEp={addEp}
+                                        cancelAdd={() => setCreateNewEpisode(false)}
+                                    />
+                                </>
+                            ) : (
+                                <button
+                                    className="font-bold text-green-500 text-center"
+                                    onClick={() => setCreateNewEpisode(true)}
+                                >
+                                    Criar episódio
+                                </button>
                             )}
                         </div>
                     )}

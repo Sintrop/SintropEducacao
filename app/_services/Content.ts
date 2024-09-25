@@ -32,6 +32,13 @@ export interface EpisodeProps {
     createdAt: string
 }
 
+export interface CreateEpisodeProps{
+    title: string;
+    description: string;
+    urlPost: string;
+    urlContent: string;
+}
+
 interface ReturnGetContentsProps {
     contents: Prisma.ContentGetPayload<{include: {Episodes: true}}>[];
     trainings: Prisma.ContentGetPayload<{include: {Episodes: true}}>[];
@@ -141,12 +148,13 @@ interface CreateContentProps{
 }
 interface ReturnCreateContentProps{
     error: boolean;
+    contentId: string;
 }
 export async function createContent(data: CreateContentProps): Promise<ReturnCreateContentProps>{
     const {author, type, category, description, platformHost, postUrl, title, urlContent} = data;
     
     try{
-        await prisma.content.create({
+        const response = await prisma.content.create({
             data:{
                 author,
                 category,
@@ -161,11 +169,47 @@ export async function createContent(data: CreateContentProps): Promise<ReturnCre
 
         return{
             error: false,
+            contentId: response.id,
         }
     }catch(e){
         console.log(e);
         return{
             error: true,
+            contentId: ''
         }
     }
+}
+
+interface CreateEpisodeFuncProps{
+    contentId: string;
+    title: string;
+    description: string;
+    urlContent: string;
+    platformHost: string;
+    postUrl: string;
+    numberEp: number;
+    season: string;
+}
+export async function createEpisode({
+    contentId, 
+    description, 
+    platformHost, 
+    title, 
+    urlContent, 
+    postUrl, 
+    numberEp,
+    season,
+}: CreateEpisodeFuncProps){
+    await prisma.episode.create({
+        data:{
+            contentId,
+            title,
+            description,
+            platformHost,
+            urlContent,
+            postUrl,
+            season,
+            numberEp
+        }
+    });
 }
