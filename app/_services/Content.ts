@@ -223,3 +223,47 @@ export async function getEpisodeData(id: string): Promise<Prisma.EpisodeGetPaylo
 
     return response;
 }
+
+interface ReturnGetContentsByAuthorProps{
+    contents: Prisma.ContentGetPayload<{
+        include:{
+            Episodes: true
+        }
+    }>[];
+}
+export async function getContentsByAuthor(wallet: string): Promise<ReturnGetContentsByAuthorProps>{
+    const response = await prisma.content.findMany({
+        where:{
+            author: wallet.toUpperCase(), 
+        },
+        orderBy: {
+            createdAt: 'desc'
+        },
+        include:{
+            Episodes: true,
+        }
+    })
+
+    return {
+        contents: response
+    }
+}
+
+interface UpdateContentDataProps{
+    contentId: string;
+    title?: string;
+    description?: string;
+}
+export async function updateContentData(data: UpdateContentDataProps){
+    const {contentId, description, title} = data;
+
+    await prisma.content.update({
+        where:{
+            id: contentId,
+        },
+        data:{
+            title,
+            description
+        }
+    })
+}

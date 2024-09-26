@@ -118,6 +118,7 @@ export function CreateContent() {
             if (response.message === 'User deleted') {
                 toast.error('Essa conta foi excluida');
             }
+            setLoading(false);
             return;
         }
         if (response?.user) {

@@ -2,7 +2,6 @@ import Image from "next/image";
 import { getContents } from "../_services/Content";
 import { ContentItem } from "../_components/ContentItem/ContentItem";
 import Link from "next/link";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { CreateContent } from "../_components/CreateContent/CreateContent";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
