@@ -1,5 +1,6 @@
 import { getContentData } from "@/app/_services/Content";
 import Link from "next/link";
+import { EpisodeItem } from "./components/EpisodeItem";
 
 interface Props {
     params: {
@@ -12,7 +13,7 @@ export default async function Content({ params }: Props) {
 
     return (
         <div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden bg-container-primary">
-            <div className="flex flex-col">
+            <div className="flex flex-col mb-[400px]">
                 <div className='w-full h-[400px] bg-gradient-to-r from-black to-black/40 flex absolute items-center justify-between px-5'>
                     <div className='flex flex-col gap-2 max-w-[50%]'>
                         <h1 className='font-bold text-white text-7xl'>{contentData?.title}</h1>
@@ -55,8 +56,29 @@ export default async function Content({ params }: Props) {
                         className="w-[170px] h-[250px] object-cover rounded-md border-2 border-white mr-10"
                     />
                 </div>
+
             </div>
 
+            {contentData?.type === 'serie' && (
+                <>
+                    <div className="flex flex-col gap-2 p-3">
+                        <div className="flex gap-4">
+                            <button
+                                className="text-white font-semibold h-10 px-3 border-b-2 border-white"
+                            >
+                                Temporada 1
+                            </button>
+                        </div>
+
+                        {contentData.Episodes.map(item => (
+                            <EpisodeItem
+                                key={item.id}
+                                ep={item}
+                            />
+                        ))}
+                    </div>
+                </>
+            )}
 
         </div>
     )

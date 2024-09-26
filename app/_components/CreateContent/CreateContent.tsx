@@ -9,8 +9,10 @@ import { createContent, createEpisode, CreateEpisodeProps } from "@/app/_service
 import { uploadImage } from "@/app/_services/UploadImage";
 import { uploadPdf } from "@/app/_services/UploadPdf";
 import { CreateEpisodeItem } from "./components/CreateEpisodeItem";
+import { ActivityIndicator } from "../ActivityIndicator/ActivityIndicator";
 
 export function CreateContent() {
+    const [loading, setLoading] = useState(false);
     const [wallet, setWallet] = useState('');
     const [password, setPassword] = useState('');
     const [userData, setUserData] = useState({} as UserProps);
@@ -43,6 +45,11 @@ export function CreateContent() {
     async function handleLogin(e: FormEvent) {
         e.preventDefault();
 
+        if(loading){
+            return;
+        }
+
+        setLoading(true);
         const response = await LoginWithWalletAndPassword(wallet, password);
 
         if (response?.error) {
@@ -60,6 +67,7 @@ export function CreateContent() {
         if (response?.user) {
             setUserData(response.user);
         }
+        setLoading(false);
     }
 
     async function handleCreateContent() {
@@ -334,10 +342,12 @@ export function CreateContent() {
                     />
 
                     <button
-                        className="w-full h-12 bg-blue-500 text-white font-bold rounded-md mt-10"
+                        className="w-full h-12 bg-blue-500 text-white font-bold rounded-md mt-10 flex items-center justify-center"
                         type='submit'
                     >
-                        Entrar
+                        {loading ? (
+                            <ActivityIndicator size={30}/>
+                        ) : 'Entrar'}
                     </button>
                 </form>
 

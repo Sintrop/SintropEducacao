@@ -213,3 +213,13 @@ export async function createEpisode({
         }
     });
 }
+
+export async function getEpisodeData(id: string): Promise<Prisma.EpisodeGetPayload<null> | null>{
+    const response = await prisma.episode.findUnique({
+        where:{
+            id,
+        }
+    });
+
+    return response;
+}

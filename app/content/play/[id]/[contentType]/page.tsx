@@ -1,5 +1,5 @@
 "use client"
-import { getContentData } from "@/app/_services/Content";
+import { getContentData, getEpisodeData } from "@/app/_services/Content";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -17,11 +17,21 @@ export default function PlayContent({ params }: Props) {
     }, []);
 
     async function getData(){
-        const {contentData} = await getContentData(params.id);
-
         if(params.contentType === 'movie'){
+            const {contentData} = await getContentData(params.id);
+
             if(contentData?.platformHost === 'youtube'){
                 fixUrlEmbedYoutube(contentData.urlContent);
+            }
+        }
+
+        if(params.contentType === 'serie'){
+            const episodeData = await getEpisodeData(params.id);
+
+            if(episodeData){
+                if(episodeData.platformHost === 'youtube'){
+                    fixUrlEmbedYoutube(episodeData.urlContent);
+                }
             }
         }
     }
