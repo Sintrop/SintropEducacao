@@ -1,5 +1,5 @@
 import { CreateEpisodeProps } from "@/app/_services/Content";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
     createNew?: boolean;
@@ -12,7 +12,21 @@ export function CreateEpisodeItem({ createNew, data, addEp, cancelAdd }: Props) 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [urlContent, setUrlContent] = useState('');
-    const [urlPost, setUrlPost] = useState('');
+    const [disableAddButton, setDisableAddButton] = useState(false);
+
+    useEffect(() => {
+        toggleDisableButton();
+    }, [
+        description, title, urlContent,
+    ]);
+
+    function toggleDisableButton(){
+        if(!description.trim() || !title.trim() || !urlContent.trim()){
+            setDisableAddButton(true);
+        }else{
+            setDisableAddButton(false);
+        }
+    }
 
     function handleAddEp() {
         if (!title.trim()) {
@@ -25,7 +39,7 @@ export function CreateEpisodeItem({ createNew, data, addEp, cancelAdd }: Props) 
             return;
         }
 
-        addEp({ title, description, urlContent, urlPost });
+        addEp({ title, description, urlContent, urlPost: '' });
     }
 
     if (createNew) {
@@ -59,8 +73,9 @@ export function CreateEpisodeItem({ createNew, data, addEp, cancelAdd }: Props) 
                     />
 
                     <button 
-                        className="mt-2 w-full h-10 rounded-md bg-green-500 text-white font-semibold"
+                        className={`mt-2 w-full h-10 rounded-md bg-green-500 text-white font-semibold ${disableAddButton && 'opacity-35'}`}
                         onClick={handleAddEp}
+                        disabled={disableAddButton}
                     >
                         Adicionar EP
                     </button>

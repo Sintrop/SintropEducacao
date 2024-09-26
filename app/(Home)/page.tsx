@@ -115,15 +115,7 @@ export default async function Home() {
                     )}
                 </div>
 
-                <Dialog>
-                    <DialogTrigger
-                        className="fixed bottom-5 right-5 w-10 h-10 bg-red-500"
-                    >
-
-                    </DialogTrigger>
-
-                    <CreateContent/>
-                </Dialog>
+                <CreateContent/>
             </div>
 
             <ToastContainer/>
