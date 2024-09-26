@@ -254,16 +254,63 @@ interface UpdateContentDataProps{
     title?: string;
     description?: string;
 }
-export async function updateContentData(data: UpdateContentDataProps){
+export async function updateContentData(data: UpdateContentDataProps): Promise<boolean>{
     const {contentId, description, title} = data;
 
-    await prisma.content.update({
-        where:{
-            id: contentId,
-        },
-        data:{
-            title,
-            description
+    try{
+        await prisma.content.update({
+            where:{
+                id: contentId,
+            },
+            data:{
+                title,
+                description
+            }
+        })
+        return true
+    }catch(e){
+        console.log(e);
+        return false
+    }
+}
+
+interface DeleteContentProps{
+    contentId: string;
+    contentType: string;
+}
+export async function deleteContent(data: DeleteContentProps): Promise<boolean>{
+    const {contentId, contentType} = data;
+    try{
+        if(contentType !== 'serie'){
+            await prisma.content.delete({
+                where:{
+                    id: contentId,
+                }
+            });
+
+            return true
         }
-    })
+
+        try{
+            await prisma.episode.deleteMany({
+                where:{
+                    contentId,
+                }
+            });
+
+            await prisma.content.delete({
+                where:{
+                    id: contentId,
+                }
+            });
+
+            return true;
+        }catch(e){
+            console.log(e);
+            return false;
+        }
+    }catch(e){
+        console.log(e)
+        return false;
+    }
 }
