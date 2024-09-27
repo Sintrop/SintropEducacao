@@ -163,7 +163,7 @@ export function CreateContent() {
         }
 
         if (contentType === 'serie') {
-            for (var i = 0; i < contentEpisodes.length; i++) {
+            for (let i = 0; i < contentEpisodes.length; i++) {
                 const ep = contentEpisodes[i];
                 await createEpisode({
                     contentId: response.contentId,
