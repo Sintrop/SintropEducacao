@@ -3,8 +3,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { contentService } from "../_domain/Content/contentService";
 
 export default async function Home() {
+  contentService.getContentsCount();
   const emphasis = {
     id: 12,
     postUrl: "",
