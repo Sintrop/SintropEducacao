@@ -3,21 +3,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { contentService } from "../_domain/Content/contentService";
+import { contentService } from "@/domain/Content/contentService";
+import { ContentItem } from "@/components/ContentItem/ContentItem";
 
 export default async function Home() {
-  contentService.getContentsCount();
-  const emphasis = {
-    id: 12,
-    postUrl: "",
-    title: "Teste",
-    description: "teste",
-  };
+  const contents = await contentService.getContentsList({ mainnet: true });
+  const emphasis = await contentService.getContent({
+    mainnet: true,
+    contentId: 1,
+  });
+
   return (
     <div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden bg-container-primary">
       <div className="flex flex-col relative">
         <Image
-          src={emphasis?.postUrl as string}
+          src={emphasis?.photo as string}
           alt="Post do conteúdo em destaque"
           width={1000}
           height={500}
@@ -41,17 +41,11 @@ export default async function Home() {
         </div>
 
         <div className="flex flex-col gap-9 mt-5 pb-10">
-          {/* {mostSeen.length > 0 && (
-            <div>
-              <p className="font-bold text-white mx-5">Mais vistos</p>
-
-              <div className="flex gap-3 pl-5">
-                {mostSeen.map((item, index) => (
-                  <ContentItem key={item?.id} data={item} index={index} />
-                ))}
-              </div>
-            </div>
-          )} */}
+          <div className="flex gap-5 flex-wrap px-5">
+            {contents.map((item, index) => (
+              <ContentItem key={item.id} data={item} index={index} />
+            ))}
+          </div>
         </div>
       </div>
 

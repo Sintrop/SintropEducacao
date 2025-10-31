@@ -1,6 +1,6 @@
 import Web3 from "web3";
 
-import { FreeEducationCenter } from "@/app/_contracts";
+import { FreeEducationCenter } from "@/contracts";
 import { bigNumberToFloat } from "@/lib/utils";
 import { ContentContractProps } from "./types";
 

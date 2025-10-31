@@ -16,7 +16,20 @@ async function getContent(props: GetContentProps): Promise<ContentProps> {
   return contentAdapter.parseContent(response);
 }
 
+async function getContentsList({ mainnet }: { mainnet?: boolean }): Promise<ContentProps[]> {
+  const response = await getContentsCount({ mainnet });
+
+  const list: ContentProps[] = [];
+  for (let i = 0; i < response; i++) {
+    const content = await getContent({ mainnet, contentId: i + 1 });
+    list.push(content);
+  }
+
+  return list;
+}
+
 export const contentService = {
   getContentsCount,
-  getContent
+  getContent,
+  getContentsList
 }

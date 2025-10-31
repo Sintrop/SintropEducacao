@@ -16,5 +16,7 @@ export interface ContentProps {
   photo: string;
   upVotes: number;
   downVotes: number;
-  type: string;
+  type: ContentType;
 }
+
+export type ContentType = 'youtube' | 'pdf';
