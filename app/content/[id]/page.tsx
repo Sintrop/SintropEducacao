@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { contentService } from "@/domain/Content/contentService";
 import { ContentProps } from "@/domain/Content/types.js";
 import { Youtube } from "./components/Youtube";
+import dynamic from "next/dynamic";
+
+const PdfView = dynamic(() => import("./components/PdfView"), { ssr: false });
 
 interface Props {
   params: {
@@ -56,7 +59,7 @@ export default function Content({ params }: Props) {
       </div>
 
       <div className="flex flex-col mt-10 items-center min-h-[500px] mb-20">
-        {/* {content.type === "pdf" && <PdfView url={content.url} />} */}
+        {content?.type === "pdf" && <PdfView url={content.url} />}
         {content?.type === "youtube" && <Youtube content={content} />}
       </div>
     </div>
