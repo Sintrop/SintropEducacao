@@ -2,6 +2,7 @@ import { contentService } from "@/domain/Content/contentService";
 import Image from "next/image";
 import Link from "next/link";
 import { ShareButton } from "./components/ShareButton";
+import { ContentItem } from "@/components/ContentItem/ContentItem";
 
 interface Props {
   params: {
@@ -15,6 +16,7 @@ export default async function Content({ params }: Props) {
     mainnet: true,
     contentId: parseInt(id),
   });
+  const contents = await contentService.getContentsList({ mainnet: true });
 
   return (
     <div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden bg-container-primary relative">
@@ -42,6 +44,19 @@ export default async function Content({ params }: Props) {
             width={200}
             height={300}
           />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-1 mt-5 pb-10">
+        <h3 className="font-semibold text-white pl-5">
+          Mais conteúdos que podem te ajudar
+        </h3>
+        <div className="flex gap-5 flex-wrap px-5">
+          {contents.map((item, index) => {
+            if (item.id !== parseInt(id)) {
+              return <ContentItem key={item.id} data={item} index={index} />;
+            }
+          })}
         </div>
       </div>
     </div>
