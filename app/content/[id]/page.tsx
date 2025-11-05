@@ -1,12 +1,7 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { contentService } from "@/domain/Content/contentService";
-import { ContentProps } from "@/domain/Content/types.js";
-import { Youtube } from "./components/Youtube";
-import dynamic from "next/dynamic";
-
-const PdfView = dynamic(() => import("./components/PdfView"), { ssr: false });
+import Image from "next/image";
+import Link from "next/link";
+import { ShareButton } from "./components/ShareButton";
 
 interface Props {
   params: {
@@ -14,19 +9,12 @@ interface Props {
   };
 }
 
-export default function Content({ params }: Props) {
-  const [content, setContent] = useState<ContentProps | null>(null);
-
-  useEffect(() => {
-    async function getContent() {
-      const response = await contentService.getContent({
-        mainnet: true,
-        contentId: parseInt(params.id),
-      });
-      setContent(response);
-    }
-    getContent();
-  }, [params]);
+export default async function Content({ params }: Props) {
+  const { id } = params;
+  const content = await contentService.getContent({
+    mainnet: true,
+    contentId: parseInt(id),
+  });
 
   return (
     <div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden bg-container-primary relative">
@@ -37,30 +25,24 @@ export default function Content({ params }: Props) {
             <h2 className="font-bold text-white">{content?.description}</h2>
 
             <div className="flex gap-4 mt-5">
-              <button
-                className="font-bold text-white px-5 w-fit h-10 flex items-center justify-center rounded-md border border-white mt-5 gap-2"
-                // onClick={() => {
-                //   // navigator.clipboard.writeText(
-                //   //   `https://app.sintrop.com/education/content/${content?.id}`
-                //   // );
-                //   //toast.success('Link copiado para área de transferência!')
-                // }}
+              <Link
+                href={`/content/${id}/view`}
+                className="font-bold px-5 w-fit h-10 flex items-center justify-center rounded-md bg-white mt-5 gap-2"
               >
-                Compartilhar conteúdo
-              </button>
+                Ver conteúdo
+              </Link>
+              <ShareButton />
             </div>
           </div>
 
-          <img
+          <Image
+            alt="Imagem do conteúdo"
             src={content?.photo}
-            className="w-[170px] h-[250px] object-cover rounded-md border-2 border-white mr-10"
+            className="w-[200px] h-[230px] object-cover rounded-md border-2 border-white mr-10"
+            width={200}
+            height={300}
           />
         </div>
-      </div>
-
-      <div className="flex flex-col mt-10 items-center min-h-[500px] mb-20">
-        {content?.type === "pdf" && <PdfView url={content.url} />}
-        {content?.type === "youtube" && <Youtube content={content} />}
       </div>
     </div>
   );

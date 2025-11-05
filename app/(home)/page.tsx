@@ -1,5 +1,4 @@
 import Image from "next/image";
-//import { ContentItem } from "../_components/ContentItem/ContentItem";
 import Link from "next/link";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,7 +9,7 @@ export default async function Home() {
   const contents = await contentService.getContentsList({ mainnet: true });
   const emphasis = await contentService.getContent({
     mainnet: true,
-    contentId: 1,
+    contentId: parseInt(process.env.NEXT_PUBLIC_CONTENT_EMPHASIS_ID ?? "1"),
   });
 
   return (
@@ -32,15 +31,16 @@ export default async function Home() {
             </h2>
 
             <Link
-              className="font-bold w-32 h-10 flex items-center justify-center rounded-md bg-white mt-5 gap-2"
-              href={`/content/${emphasis?.id}`}
+              className="font-bold w-fit px-10 h-10 flex items-center justify-center rounded-md bg-white mt-5 gap-2"
+              href={`/content/${emphasis?.id}/view`}
             >
-              Assitir
+              Ver conteúdo
             </Link>
           </div>
         </div>
 
-        <div className="flex flex-col gap-9 mt-5 pb-10">
+        <div className="flex flex-col gap-1 mt-5 pb-10">
+          <h3 className="font-semibold text-white pl-5">Conteúdos</h3>
           <div className="flex gap-5 flex-wrap px-5">
             {contents.map((item, index) => (
               <ContentItem key={item.id} data={item} index={index} />

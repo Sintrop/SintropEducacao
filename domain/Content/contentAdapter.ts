@@ -25,7 +25,15 @@ function checkContentType(url: string): ReturnCheckContentTypeProps {
   }
   return {
     type: 'pdf',
-    url
+    url: `${process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/ipfs/${url}`
+  }
+}
+
+function parsePhotoUrl(url: string): string {
+  if (url.includes('http://') || url.includes('https://')) {
+    return url;
+  } else {
+    return `${process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/ipfs/${url}`;
   }
 }
 
@@ -35,7 +43,7 @@ function parseContent(data: ContentContractProps): ContentProps {
     id: bigNumberToFloat(data.id),
     title: data.title,
     description: data.description,
-    photo: data.photo,
+    photo: parsePhotoUrl(data.photo),
     url: response.url,
     downVotes: bigNumberToFloat(data.downVotes),
     upVotes: bigNumberToFloat(data.upVotes),

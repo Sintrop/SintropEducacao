@@ -1,3 +1,5 @@
+"use client";
+
 import { ContentProps } from "@/domain/Content/types";
 
 interface Props {
@@ -5,7 +7,7 @@ interface Props {
 }
 export function Youtube({ content }: Props) {
   return (
-    <div className="w-full max-w-[1024px] h-full max-h-[512px]">
+    <div className="w-full h-full">
       <iframe
         width="100%"
         height="100%"

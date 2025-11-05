@@ -31,7 +31,7 @@ export function ContentItem({ data }: Props) {
   // }
   return (
     <Link
-      className="flex w-[150px] h-[220px] border-2 border-white rounded-md overflow-hidden relative"
+      className="flex w-[200px] h-[230px] border-2 border-white rounded-md overflow-hidden relative"
       href={`/content/${data.id}`}
     >
       <Image
