@@ -4,9 +4,14 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { contentService } from "@/domain/Content/contentService";
 import { ContentItem } from "@/components/ContentItem/ContentItem";
+import { whitepaperService } from "@/domain/Whitepaper/whitepaperService";
+import { WhitepaperItem } from "@/components/WhitepaperItem/WhitepaperItem";
 
 export default async function Home() {
   const contents = await contentService.getContentsList({ mainnet: true });
+  const whitepapers = await whitepaperService.getWhitepaperList({
+    mainnet: true,
+  });
   const emphasis = await contentService.getContent({
     mainnet: true,
     contentId: parseInt(process.env.NEXT_PUBLIC_CONTENT_EMPHASIS_ID ?? "1"),
@@ -40,7 +45,14 @@ export default async function Home() {
         </div>
 
         <div className="flex flex-col gap-1 mt-5 pb-10">
-          <h3 className="font-semibold text-white pl-5">Conteúdos</h3>
+          <h3 className="font-semibold text-white pl-5">Whitepapers</h3>
+          <div className="flex gap-5 flex-wrap px-5">
+            {whitepapers.map((item) => (
+              <WhitepaperItem key={item.id} data={item} />
+            ))}
+          </div>
+
+          <h3 className="font-semibold text-white pl-5 mt-5">Conteúdos</h3>
           <div className="flex gap-5 flex-wrap px-5">
             {contents.map((item, index) => (
               <ContentItem key={item.id} data={item} index={index} />
