@@ -23,7 +23,7 @@ export default async function Content({ params }: Props) {
       <div className="flex flex-col mb-[400px]">
         <div className="w-full h-[400px] bg-gradient-to-r from-black to-black/40 flex absolute items-center justify-between px-5">
           <div className="flex flex-col gap-2 max-w-[50%]">
-            <h1 className="font-bold text-white text-7xl">{content?.title}</h1>
+            <h1 className="font-bold text-white text-5xl">{content?.title}</h1>
             <h2 className="font-bold text-white">{content?.description}</h2>
 
             <div className="flex gap-4 mt-5">
