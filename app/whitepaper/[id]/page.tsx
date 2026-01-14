@@ -1,8 +1,8 @@
 import { contentService } from "@/domain/Content/contentService";
-import Image from "next/image";
 import Link from "next/link";
 import { ShareButton } from "./components/ShareButton";
 import { ContentItem } from "@/components/ContentItem/ContentItem";
+import { whitepaperService } from "@/domain/Whitepaper/whitepaperService";
 
 interface Props {
   params: {
@@ -10,40 +10,34 @@ interface Props {
   };
 }
 
-export default async function Content({ params }: Props) {
+export default async function Whitepaper({ params }: Props) {
   const { id } = params;
-  const content = await contentService.getContent({
+  const whitepaper = await whitepaperService.getWhitepaper({
     mainnet: true,
-    contentId: parseInt(id),
+    whitepaperId: parseInt(id),
   });
   const contents = await contentService.getContentsList({ mainnet: true });
 
   return (
     <div className="flex flex-col w-full h-screen overflow-y-auto overflow-x-hidden bg-container-primary relative">
-      <div className="flex flex-col mb-[400px]">
-        <div className="w-full h-[400px] bg-gradient-to-r from-black to-black/40 flex absolute items-center justify-between px-5">
+      <div className="flex flex-col mb-[450px]">
+        <div className="w-full h-[450px] bg-gradient-to-r from-black to-black/40 flex absolute items-center justify-between px-5">
           <div className="flex flex-col gap-2 max-w-[50%]">
-            <h1 className="font-bold text-white text-5xl">{content?.title}</h1>
-            <h2 className="font-bold text-white">{content?.description}</h2>
+            <h1 className="font-bold text-white text-5xl">
+              {whitepaper?.title}
+            </h1>
+            <h2 className="font-bold text-white">{whitepaper?.description}</h2>
 
             <div className="flex gap-4 mt-5">
               <Link
-                href={`/content/${id}/view`}
+                href={`/whitepaper/${id}/view`}
                 className="font-bold px-5 w-fit h-10 flex items-center justify-center rounded-md bg-white mt-5 gap-2"
               >
-                Ver conteúdo
+                Ver whitepaper
               </Link>
               <ShareButton />
             </div>
           </div>
-
-          <Image
-            alt="Imagem do conteúdo"
-            src={content?.photo}
-            className="w-[200px] h-[230px] object-cover rounded-md border-2 border-white mr-10"
-            width={200}
-            height={300}
-          />
         </div>
       </div>
 
